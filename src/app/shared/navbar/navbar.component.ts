@@ -40,13 +40,9 @@ import { NavigationEnd, Router } from '@angular/router';
     <span class="p-icon">P+</span>
     <span>Add</span>
   </a>
-  <a routerLink="/about" routerLinkActive="active" class="bottom-nav-link">
-    <i class="fa-solid fa-circle-info"></i>
-    <span>About</span>
-  </a>
-  <a routerLink="/contact" routerLinkActive="active" class="bottom-nav-link">
-    <i class="fa-regular fa-envelope"></i>
-    <span>Contact</span>
+  <a routerLink="/profile" routerLinkActive="active" class="bottom-nav-link">
+    <i class="fa-solid fa-circle-user"></i>
+    <span>Profile</span>
   </a>
 </div>
   `,

@@ -6,5 +6,6 @@ export const routes: Routes = [
   { path: 'add-parking', loadComponent: () => import('./pages/add-parking/add-parking.component').then(m => m.AddParkingComponent) },
   { path: 'about', loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent) },
   { path: 'contact', loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent) },
+  { path: 'profile', loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent) },
   { path: '**', redirectTo: '' }
 ];
