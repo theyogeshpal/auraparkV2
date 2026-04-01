@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 interface Parking {
   parkingname: string; address: string; city: string; mobile: string;
@@ -51,7 +51,7 @@ interface Parking {
           <h5>No parking spots found in {{searchCity}}</h5>
         </div>
 
-        <div *ngFor="let row of filtered" class="parking-card shadow-sm d-flex">
+        <div *ngFor="let row of filtered" class="parking-card shadow-sm d-flex" (click)="bookParking(row)">
           <div class="w-100">
             <div class="d-flex w-100 justify-content-between align-items-start">
               <h5 class="card-title">{{row.parkingname}}</h5>
@@ -61,7 +61,7 @@ interface Parking {
             <div class="info-row"><i class="fa-solid fa-phone"></i><span>{{row.mobile}}</span></div>
             <div class="mt-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
               <div class="price-badge">₹{{row.hourrate}} /hr</div>
-              <a [href]="row.map" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+              <a [href]="row.map" target="_blank" (click)="$event.stopPropagation()" class="btn btn-sm btn-outline-primary rounded-pill px-3">
                 <i class="fa-solid fa-route me-1"></i> Directions
               </a>
             </div>
@@ -98,7 +98,7 @@ export class FindParkingComponent {
 
   filtered: Parking[] = [...this.parkings];
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -116,4 +116,16 @@ export class FindParkingComponent {
       p.city.toLowerCase().includes(q) || p.parkingname.toLowerCase().includes(q)
     );
   }
+
+  bookParking(parking: Parking) {
+    this.router.navigate(['/parking-booking'], {
+      queryParams: {
+        name: parking.parkingname,
+        address: parking.address,
+        rate: parking.hourrate,
+        type: parking.type
+      }
+    });
+  }
 }
+

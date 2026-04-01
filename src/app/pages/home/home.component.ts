@@ -238,8 +238,7 @@ import { FormsModule } from '@angular/forms';
       </div>
     </div>
   </div>
-</section>
-  `,
+</section>`,
   styles: [`
     .hero { height: 100vh; }
     .hero-left > h1 { font-size: 70px; }

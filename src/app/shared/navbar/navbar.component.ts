@@ -20,8 +20,10 @@ import { NavigationEnd, Router } from '@angular/router';
         <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a></li>
         <li><a routerLink="/find-parking" routerLinkActive="active">Find Parking</a></li>
         <li><a routerLink="/add-parking" routerLinkActive="active">Add Parking</a></li>
+        <li><a routerLink="/bookings" routerLinkActive="active">Bookings</a></li>
         <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
         <li><a routerLink="/contact" routerLinkActive="active">Contact Us</a></li>
+        <li><a routerLink="/profile" routerLinkActive="active" class="profile-nav-btn"><i class="fa-solid fa-circle-user me-1"></i>Profile</a></li>
       </ul>
     </div>
   </div>
@@ -33,12 +35,16 @@ import { NavigationEnd, Router } from '@angular/router';
     <span>Home</span>
   </a>
   <a routerLink="/find-parking" routerLinkActive="active" class="bottom-nav-link">
-    <i class="fa-solid fa-magnifying-glass-location"></i>
-    <span>Find</span>
+    <i class="fa-solid fa-square-parking"></i>
+    <span>Park</span>
   </a>
   <a routerLink="/add-parking" routerLinkActive="active" class="bottom-nav-link">
     <span class="p-icon">P+</span>
     <span>Add</span>
+  </a>
+  <a routerLink="/bookings" routerLinkActive="active" class="bottom-nav-link">
+    <i class="fa-solid fa-book-bookmark"></i>
+    <span>Bookings</span>
   </a>
   <a routerLink="/profile" routerLinkActive="active" class="bottom-nav-link">
     <i class="fa-solid fa-circle-user"></i>
@@ -50,9 +56,11 @@ import { NavigationEnd, Router } from '@angular/router';
     #header { transition: background-color 0.2s ease; background-color: transparent; }
     #header.scrolled { background-color: black; }
     .main-nav { background-color: transparent; }
-    .nav-tabs { margin: 0; width: 75%; display: flex; justify-content: space-evenly; font-size: 20px; list-style: none; border: none; }
+    .nav-tabs { margin: 0; width: 75%; display: flex; justify-content: space-evenly; font-size: 16px; list-style: none; border: none; }
     .nav-tabs > li > a { text-decoration: none; color: white; opacity: 0.6; }
     .nav-tabs > li > a:hover, .nav-tabs > li > a.active { opacity: 1 !important; color: white; }
+    .profile-nav-btn { border: 1.5px solid rgba(255,255,255,0.4); border-radius: 50px; padding: 4px 14px !important; opacity: 1 !important; transition: all 0.2s; }
+    .profile-nav-btn:hover, .profile-nav-btn.active { background: white; color: black !important; }
 
     .bottom-nav { position: fixed; bottom: 0; bottom: env(safe-area-inset-bottom, 0); left: 0; width: 100%; height: 70px; background: #ffffff; z-index: 1050; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); margin: 0; padding: 0; border-top: 1px solid #f3f4f6; transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform; }
     .bottom-nav-link { color: #9ca3af; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; width: 100%; height: 100%; position: relative; transition: color 0.2s; padding-top: 5px; outline: none; -webkit-tap-highlight-color: transparent; }
