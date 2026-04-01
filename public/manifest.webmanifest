@@ -1,0 +1,24 @@
+{
+  "name": "AuraPark - Smart Parking Solutions",
+  "short_name": "AuraPark",
+  "description": "Find and manage parking spots easily with AuraPark",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "Assets/images/applogo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "Assets/images/applogo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

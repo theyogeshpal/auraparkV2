@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/navbar/navbar.component';
 import { FooterComponent } from './shared/footer/footer.component';
+import { PwaUpdateService } from './pwa-update.service';
 
 @Component({
   selector: 'app-root',
@@ -19,4 +20,10 @@ import { FooterComponent } from './shared/footer/footer.component';
     }
   `]
 })
-export class App {}
+export class App implements OnInit {
+  private pwaUpdate = inject(PwaUpdateService);
+
+  ngOnInit() {
+    this.pwaUpdate.init();
+  }
+}
