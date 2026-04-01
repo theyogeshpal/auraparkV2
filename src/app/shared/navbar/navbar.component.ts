@@ -58,7 +58,7 @@ import { NavigationEnd, Router } from '@angular/router';
     .nav-tabs > li > a { text-decoration: none; color: white; opacity: 0.6; }
     .nav-tabs > li > a:hover, .nav-tabs > li > a.active { opacity: 1 !important; color: white; }
 
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 70px; background: #ffffff; z-index: 1050; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); margin: 0; padding: 0; border-top: 1px solid #f3f4f6; }
+    .bottom-nav { position: fixed; bottom: 0; bottom: env(safe-area-inset-bottom, 0); left: 0; width: 100%; height: 70px; background: #ffffff; z-index: 1050; box-shadow: 0 -4px 20px rgba(0,0,0,0.06); margin: 0; padding: 0; border-top: 1px solid #f3f4f6; transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform; }
     .bottom-nav-link { color: #9ca3af; text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 600; width: 100%; height: 100%; position: relative; transition: color 0.2s; padding-top: 5px; outline: none; -webkit-tap-highlight-color: transparent; }
     .bottom-nav-link:focus, .bottom-nav-link:active { outline: none; background: transparent; }
     .bottom-nav-link i, .bottom-nav-link .p-icon { font-size: 1.35rem; margin-bottom: 3px; display: block; }
