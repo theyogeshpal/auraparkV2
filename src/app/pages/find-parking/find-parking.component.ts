@@ -2,11 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
-interface Parking {
-  parkingname: string; address: string; city: string; mobile: string;
-  hourrate: string; type: string; bikespace: string; carspace: string; map: string;
-}
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-find-parking',
@@ -46,9 +42,9 @@ interface Parking {
       </div>
 
       <div *ngIf="!loading">
-        <div *ngIf="filtered.length === 0 && searchCity" class="text-center py-5 text-muted">
+        <div *ngIf="filtered.length === 0" class="text-center py-5 text-muted">
           <img src="/Assets/images/no_data_found.png" class="img-fluid mb-3" style="max-width:200px">
-          <h5>No parking spots found in {{searchCity}}</h5>
+          <h5>No parking spots found</h5>
         </div>
 
         <div *ngFor="let row of filtered" class="parking-card shadow-sm d-flex" (click)="bookParking(row)">
@@ -76,56 +72,46 @@ interface Parking {
 
   <div class="col-lg-7 col-md-6 py-3 d-none d-md-block">
     <div class="n-map">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d227821.98710530254!2d80.77769949830774!3d26.848902829067065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1775041687024!5m2!1sen!2sin" class="w-100 h-100" style="border:0;" allowfullscreen="" loading="eager" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d227821.98710530254!2d80.77769949830774!3d26.848902829067065!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x399bfd991f32b16b%3A0x93ccba8909978be7!2sLucknow%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1775041687024!5m2!1sen!2sin" class="w-100 h-100" style="border:0;" allowfullscreen="" loading="eager"></iframe>
     </div>
   </div>
 </div>
   `,
   styles: []
 })
-export class FindParkingComponent {
+export class FindParkingComponent implements OnInit {
   searchCity = '';
   loading = false;
   bikeImg = '/Assets/images/hf-delux.png';
   carImg = '/Assets/images/Honda-car-image.png';
   bothImg = '/Assets/images/car-scooty-ezgif.com-crop.gif';
+  parkings: any[] = [];
+  filtered: any[] = [];
 
-  parkings: Parking[] = [
-    { parkingname: 'Central City Parking', address: '123 MG Road, Near City Mall', city: 'Delhi', mobile: '9876543210', hourrate: '20', type: 'Both', bikespace: '50', carspace: '30', map: 'https://maps.google.com/?q=Delhi' },
-    { parkingname: 'Green Park Parking', address: '45 Sector 18, Near Metro', city: 'Noida', mobile: '9765432109', hourrate: '15', type: 'Bike', bikespace: '40', carspace: 'N/A', map: 'https://maps.google.com/?q=Noida' },
-    { parkingname: 'Mall Road Parking', address: '78 DLF Phase 2, Cyber Hub', city: 'Gurgaon', mobile: '9654321098', hourrate: '25', type: 'Car', bikespace: 'N/A', carspace: '40', map: 'https://maps.google.com/?q=Gurgaon' },
-  ];
-
-  filtered: Parking[] = [...this.parkings];
-
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      if (params['q']) {
-        this.searchCity = params['q'];
-        this.onSearch();
-      }
+      if (params['q']) { this.searchCity = params['q']; }
+      this.loadParkings();
+    });
+  }
+
+  loadParkings() {
+    this.loading = true;
+    this.api.getParkings(this.searchCity ? { q: this.searchCity } : {}).subscribe({
+      next: (res) => { this.parkings = res.data || []; this.filtered = [...this.parkings]; this.loading = false; },
+      error: () => { this.loading = false; }
     });
   }
 
   onSearch() {
     const q = this.searchCity.toLowerCase();
     if (!q) { this.filtered = [...this.parkings]; return; }
-    this.filtered = this.parkings.filter(p =>
-      p.city.toLowerCase().includes(q) || p.parkingname.toLowerCase().includes(q)
-    );
+    this.filtered = this.parkings.filter(p => p.city.toLowerCase().includes(q) || p.parkingname.toLowerCase().includes(q));
   }
 
-  bookParking(parking: Parking) {
-    this.router.navigate(['/parking-booking'], {
-      queryParams: {
-        name: parking.parkingname,
-        address: parking.address,
-        rate: parking.hourrate,
-        type: parking.type
-      }
-    });
+  bookParking(parking: any) {
+    this.router.navigate(['/parking-booking'], { queryParams: { name: parking.parkingname, address: parking.address, rate: parking.hourrate, type: parking.type, id: parking.id } });
   }
 }
-
