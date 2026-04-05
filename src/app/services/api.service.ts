@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from './auth.service';
 
-const BASE = 'http://localhost:5000/api';
+const BASE = 'https://aurapark-backend.onrender.com/api';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
