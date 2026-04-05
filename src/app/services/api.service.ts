@@ -63,4 +63,8 @@ export class ApiService {
   markAllNotificationsRead() {
     return this.http.put<any>(`${BASE}/notifications/user/read-all`, {}, this.headers);
   }
+
+  getFaqs() {
+    return this.http.get<any>(`${BASE}/faqs`);
+  }
 }

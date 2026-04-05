@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -142,46 +142,18 @@ import { ApiService } from '../../services/api.service';
       </div>
       <div class="col-lg-7">
         <div class="accordion accordion-flush" id="faqAccordion">
-          <div class="accordion-item shadow-sm">
+          <div class="accordion-item shadow-sm" *ngFor="let faq of faqs(); let i = index">
             <h2 class="accordion-header">
-              <button class="accordion-button bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                Does AuraPark allow me to reserve a spot ahead of time?
+              <button class="accordion-button bg-transparent fw-bold" [class.collapsed]="i !== 0" type="button" data-bs-toggle="collapse" [attr.data-bs-target]="'#faq'+i">
+                {{faq.question}}
               </button>
             </h2>
-            <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">AuraPark is a real-time parking discovery tool. We show you filtered, accurate information on available spots. Once you locate a spot, you navigate there directly and pay at the lot entrance.</div>
+            <div [id]="'faq'+i" class="accordion-collapse collapse" [class.show]="i === 0" data-bs-parent="#faqAccordion">
+              <div class="accordion-body">{{faq.answer}}</div>
             </div>
           </div>
-          <div class="accordion-item shadow-sm">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                How accurate is the real-time availability?
-              </button>
-            </h2>
-            <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">We integrate with smart city feeds and community suggestions to provide the most current data possible. We recommend checking the app just before you depart.</div>
-            </div>
-          </div>
-          <div class="accordion-item shadow-sm">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                How can AuraPark help me find EV charging or covered spots?
-              </button>
-            </h2>
-            <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">AuraPark allows you to hyper-filter your search results for EV charging stations, accessible parking, height restrictions, and covered/uncovered spots.</div>
-            </div>
-          </div>
-          <div class="accordion-item shadow-sm">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed bg-transparent fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                Is the parking rate shown the exact price I will pay?
-              </button>
-            </h2>
-            <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-              <div class="accordion-body">The hourly rate displayed is the most recently reported rate. While highly accurate, rates are estimates and may be subject to change by the parking operator.</div>
-            </div>
-          </div>
+          <!-- Fallback if no FAQs -->
+          <div *ngIf="faqs().length === 0" class="text-center text-muted py-4">Loading FAQs...</div>
         </div>
       </div>
     </div>
@@ -332,13 +304,21 @@ import { ApiService } from '../../services/api.service';
     }
   `]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   searchQuery = '';
   results = signal<any[]>([]);
+  faqs = signal<any[]>([]);
   private allParkings: any[] = [];
   private loaded = false;
 
   constructor(private router: Router, private api: ApiService) {}
+
+  ngOnInit() {
+    this.api.getFaqs().subscribe({
+      next: (res) => this.faqs.set(res.data || []),
+      error: () => {}
+    });
+  }
 
   onType(q: string) {
     if (!q.trim()) { this.results.set([]); return; }
