@@ -1,19 +1,36 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, CommonModule],
   template: `
 <!-- Hero -->
 <div class="row hero" style="padding-top:105px; background: url(/Assets/images/banner-bg.png); background-size: 100% 100%;">
   <div class="col-sm-6 hero-left text-light d-flex flex-column justify-content-center">
     <div class="d-block mt-4 mt-md-0 mb-4 mb-md-5 w-100 px-3 px-sm-5 search-widget">
-      <div class="mobile-search-bar shadow-lg">
+      <div class="mobile-search-bar shadow-lg" style="position:relative">
         <i class="fa-solid fa-location-dot text-secondary"></i>
-        <input type="text" [(ngModel)]="searchQuery" (keyup.enter)="search()" placeholder="Enter destination...">
+        <input type="text" [(ngModel)]="searchQuery" (ngModelChange)="onType($event)" (keyup.enter)="search()" placeholder="Enter destination..." autocomplete="off">
         <i class="fa-solid fa-sliders text-secondary" (click)="search()"></i>
+      </div>
+      <!-- Dropdown Results -->
+      <div class="search-dropdown" *ngIf="results().length > 0">
+        <div class="search-result-item" *ngFor="let p of results()" (click)="selectParking(p)">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="result-name">{{p.parkingname}}</div>
+              <div class="result-addr"><i class="fa-solid fa-location-dot me-1"></i>{{p.city}}</div>
+            </div>
+            <span class="result-rate">₹{{p.hourrate}}/hr</span>
+          </div>
+        </div>
+        <div class="search-view-all" (click)="search()">
+          <i class="fa-solid fa-magnifying-glass me-2"></i>View all results for "{{searchQuery}}"
+        </div>
       </div>
     </div>
     <h1 class="px-sm-5 px-3 fw-bold text-start">
@@ -291,6 +308,14 @@ import { FormsModule } from '@angular/forms';
     .mobile-search-bar { display: flex; align-items: center; background: white; border-radius: 50px; padding: 12px 20px; gap: 12px; }
     .mobile-search-bar input { flex: 1; border: none; outline: none; background: transparent; color: #333; font-size: 1rem; width: 100%; }
     .mobile-search-bar i { font-size: 1.2rem; cursor: pointer; }
+    .search-dropdown { background: white; border-radius: 16px; margin-top: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); overflow: hidden; max-height: 320px; overflow-y: auto; }
+    .search-result-item { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.15s; }
+    .search-result-item:hover { background: #f8fafc; }
+    .result-name { font-weight: 700; color: #1e293b; font-size: 0.95rem; }
+    .result-addr { font-size: 0.78rem; color: #94a3b8; margin-top: 2px; }
+    .result-rate { font-weight: 800; color: #10b981; font-size: 0.9rem; white-space: nowrap; }
+    .search-view-all { padding: 12px 20px; text-align: center; font-size: 0.85rem; font-weight: 700; color: #3b82f6; cursor: pointer; background: #f8fafc; }
+    .search-view-all:hover { background: #eff6ff; }
     .s-img { height: 120px; transition: transform 0.4s ease; }
     .service-card:hover .s-img { transform: scale(1.1); }
     @media (max-width: 426px) {
@@ -309,10 +334,42 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent {
   searchQuery = '';
-  
-  constructor(private router: Router) {}
+  results = signal<any[]>([]);
+  private allParkings: any[] = [];
+  private loaded = false;
+
+  constructor(private router: Router, private api: ApiService) {}
+
+  onType(q: string) {
+    if (!q.trim()) { this.results.set([]); return; }
+    if (!this.loaded) {
+      this.api.getParkings().subscribe({
+        next: (res) => { this.allParkings = res.data || []; this.loaded = true; this.filter(q); },
+        error: () => {}
+      });
+    } else {
+      this.filter(q);
+    }
+  }
+
+  private filter(q: string) {
+    const lower = q.toLowerCase();
+    this.results.set(
+      this.allParkings.filter(p =>
+        p.parkingname?.toLowerCase().includes(lower) ||
+        p.city?.toLowerCase().includes(lower) ||
+        p.address?.toLowerCase().includes(lower)
+      ).slice(0, 6)
+    );
+  }
+
+  selectParking(p: any) {
+    this.results.set([]);
+    this.router.navigate(['/parking-booking'], { queryParams: { name: p.parkingname, address: p.address, rate: p.hourrate, type: p.type, id: p._id } });
+  }
 
   search() {
+    this.results.set([]);
     if (this.searchQuery.trim()) {
       this.router.navigate(['/find-parking'], { queryParams: { q: this.searchQuery.trim() } });
     } else {

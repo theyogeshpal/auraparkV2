@@ -27,7 +27,7 @@ import { ApiService } from '../../services/api.service';
   @media(max-width:768px) { .parking-data { height: auto; overflow: visible; } .n-map { height: 300px; margin-top: 20px; } }
 </style>
 
-<div class="row px-lg-5 px-3 parking-data" style="padding-top: 80px;">
+<div class="row px-lg-5 px-3 parking-data" style="padding-top: 60px;">
   <div class="col-lg-5 col-md-6 h-100 d-flex flex-column py-3">
     <div class="search-box-container">
       <div class="search-input-group">
@@ -112,6 +112,6 @@ export class FindParkingComponent implements OnInit {
   }
 
   bookParking(parking: any) {
-    this.router.navigate(['/parking-booking'], { queryParams: { name: parking.parkingname, address: parking.address, rate: parking.hourrate, type: parking.type, id: parking.id } });
+    this.router.navigate(['/parking-booking'], { queryParams: { name: parking.parkingname, address: parking.address, rate: parking.hourrate, type: parking.type, id: parking._id } });
   }
 }

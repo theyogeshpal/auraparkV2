@@ -26,7 +26,11 @@ import { ApiService } from '../../services/api.service';
   .custom-checkbox { width: 22px; height: 22px; accent-color: #AB1111; cursor: pointer; }
   .sticky-sidebar { position: sticky; top: 120px; }
   .whats-app-btn { background: #25D366; color: white; border: none; font-weight: 600; padding: 12px 25px; border-radius: 50px; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
-  .whats-app-btn:hover { background: #128C7E; color: white; }
+  .upload-area { border: 2px dashed #e2e8f0; border-radius: 16px; padding: 30px; text-align: center; cursor: pointer; transition: all 0.3s; background: #f8fafc; }
+  .upload-area:hover, .upload-area.dragover { border-color: #AB1111; background: #fff5f5; }
+  .upload-area i { font-size: 2.5rem; color: #cbd5e1; }
+  .preview-img { width: 100%; height: 200px; object-fit: cover; border-radius: 12px; border: 1px solid #e2e8f0; }
+  .remove-img-btn { position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; background: #ef4444; color: white; border: none; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem; }
 </style>
 
 <div class="add-parking-page">
@@ -148,6 +152,21 @@ import { ApiService } from '../../services/api.service';
                 </div>
               </div>
 
+              <div class="col-12 mt-2"><h5 class="fw-bold text-dark border-bottom pb-2">Parking Photo</h5></div>
+              <div class="col-12">
+                <input type="file" id="photoInput" accept="image/*" hidden (change)="onFileSelect($event)">
+                <div *ngIf="!previewUrl" class="upload-area" (click)="triggerUpload()" (dragover)="$event.preventDefault()" (drop)="onDrop($event)">
+                  <i class="fa-solid fa-cloud-arrow-up d-block mb-3"></i>
+                  <p class="fw-bold text-dark mb-1">Click to upload or drag & drop</p>
+                  <p class="text-muted small mb-0">JPG, PNG, WEBP — Max 5MB</p>
+                </div>
+                <div *ngIf="previewUrl" class="position-relative">
+                  <img [src]="previewUrl" class="preview-img">
+                  <button type="button" class="remove-img-btn" (click)="removePhoto()"><i class="fa-solid fa-xmark"></i></button>
+                  <p class="text-muted small mt-2 mb-0"><i class="fa-solid fa-check-circle text-success me-1"></i>{{photoFile?.name}}</p>
+                </div>
+              </div>
+
               <div class="col-12 mt-2">
                 <button type="submit" class="submit-btn shadow-sm" [disabled]="loading()">
                   <span *ngIf="!loading()">SUBMIT LISTING <i class="fa-solid fa-arrow-right ms-2"></i></span>
@@ -168,6 +187,8 @@ export class AddParkingComponent {
   loading = signal(false);
   success = signal('');
   error = signal('');
+  previewUrl: string | null = null;
+  photoFile: File | null = null;
 
   form = { name: '', email: '', mobile: '', parkingName: '', address: '', city: '', state: '', map: '', type: 'Both', carSpace: '', bikeSpace: '', hourRate: '', operatingHours: '', covered: false, evCharging: false };
 
@@ -189,12 +210,47 @@ export class AddParkingComponent {
     else { this.form.carSpace = ''; this.form.bikeSpace = ''; }
   }
 
+  triggerUpload() { document.getElementById('photoInput')?.click(); }
+
+  onFileSelect(event: Event) {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) this.setPhoto(file);
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const file = event.dataTransfer?.files?.[0];
+    if (file && file.type.startsWith('image/')) this.setPhoto(file);
+  }
+
+  setPhoto(file: File) {
+    if (file.size > 5 * 1024 * 1024) {
+      (window as any).Swal.fire({ toast: true, position: 'top-end', icon: 'error', title: 'Image must be under 5MB', showConfirmButton: false, timer: 3000 });
+      return;
+    }
+    this.photoFile = file;
+    const reader = new FileReader();
+    reader.onload = (e) => this.previewUrl = e.target?.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  removePhoto() {
+    this.photoFile = null;
+    this.previewUrl = null;
+    const input = document.getElementById('photoInput') as HTMLInputElement;
+    if (input) input.value = '';
+  }
+
   submit() {
     this.success.set(''); this.error.set('');
     this.loading.set(true);
-    this.api.submitParkingRequest(this.form).subscribe({
+    const fd = new FormData();
+    Object.entries(this.form).forEach(([k, v]) => fd.append(k, String(v)));
+    if (this.photoFile) fd.append('photo', this.photoFile);
+    this.api.submitParkingRequest(fd).subscribe({
       next: (res) => {
         this.form = { name: '', email: '', mobile: '', parkingName: '', address: '', city: '', state: '', map: '', type: 'Both', carSpace: '', bikeSpace: '', hourRate: '', operatingHours: '', covered: false, evCharging: false };
+        this.removePhoto();
         this.loading.set(false);
         (window as any).Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.message || 'Spot submitted for review!', showConfirmButton: false, timer: 3500 });
       },

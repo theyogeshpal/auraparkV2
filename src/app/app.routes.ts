@@ -16,5 +16,6 @@ export const routes: Routes = [
   { path: 'bookings', canActivate: [authGuard], loadComponent: () => import('./pages/bookings/bookings.component').then(m => m.BookingsComponent) },
   { path: 'notifications', canActivate: [authGuard], loadComponent: () => import('./pages/notifications/notifications.component').then(m => m.NotificationsComponent) },
   { path: 'parking-booking', canActivate: [authGuard], loadComponent: () => import('./pages/parking-booking/parking-booking.component').then(m => m.ParkingBookingComponent) },
+  { path: 'booking-receipt/:id', canActivate: [authGuard], loadComponent: () => import('./pages/booking-receipt/booking-receipt.component').then(m => m.BookingReceiptComponent) },
   { path: '**', redirectTo: '' }
 ];

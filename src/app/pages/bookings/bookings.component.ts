@@ -2,6 +2,7 @@ import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ApiService } from '../../services/api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-bookings',
@@ -16,6 +17,7 @@ import { ApiService } from '../../services/api.service';
 
   <div class="tabs-container">
     <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab() === 'prebooked'" (click)="setTab('prebooked')">Pre-Booked</button>
       <button class="tab-btn" [class.active]="activeTab() === 'ongoing'" (click)="setTab('ongoing')">Ongoing</button>
       <button class="tab-btn" [class.active]="activeTab() === 'completed'" (click)="setTab('completed')">Completed</button>
       <button class="tab-btn" [class.active]="activeTab() === 'cancelled'" (click)="setTab('cancelled')">Cancelled</button>
@@ -52,11 +54,15 @@ import { ApiService } from '../../services/api.service';
           </div>
         </div>
       </div>
-      <div class="card-actions" *ngIf="b.status === 'ongoing'">
+      <div class="card-actions" *ngIf="b.status === 'ongoing' || b.status === 'prebooked'">
         <button class="btn-cancel" (click)="cancelBooking(b._id)" [disabled]="cancelling() === b._id">
           <span *ngIf="cancelling() !== b._id">Cancel Booking</span>
           <span *ngIf="cancelling() === b._id"><i class="fa-solid fa-spinner fa-spin me-1"></i>Cancelling...</span>
         </button>
+      </div>
+      <div class="cancel-reason" *ngIf="b.status === 'cancelled' && b.cancelReason">
+        <i class="fa-solid fa-circle-xmark me-2"></i>
+        <span>{{b.cancelReason}}</span>
       </div>
     </div>
   </div>
@@ -93,6 +99,8 @@ import { ApiService } from '../../services/api.service';
     .btn-cancel { flex: 1; padding: 14px 0; border: none; background: #ef4444; color: white; font-weight: 700; font-size: 0.95rem; border-radius: 16px; cursor: pointer; transition: all 0.2s; }
     .btn-cancel:hover:not(:disabled) { background: #dc2626; }
     .btn-cancel:disabled { opacity: 0.7; cursor: not-allowed; }
+    .cancel-reason { margin-top: 12px; padding: 10px 14px; background: #fff1f2; border-radius: 12px; font-size: 0.8rem; color: #be123c; display: flex; align-items: flex-start; gap: 6px; line-height: 1.5; }
+    .cancel-reason i { flex-shrink: 0; margin-top: 2px; }
     @media (min-width: 768px) {
       .header, .tabs-container { max-width: 900px; margin: 0 auto; }
       .header { padding: 24px 20px; margin-top: 60px; }
@@ -103,7 +111,7 @@ import { ApiService } from '../../services/api.service';
   `]
 })
 export class BookingsComponent implements OnInit {
-  activeTab = signal<'ongoing' | 'completed' | 'cancelled'>('ongoing');
+  activeTab = signal<'prebooked' | 'ongoing' | 'completed' | 'cancelled'>('prebooked');
   allBookings = signal<any[]>([]);
   loading = signal(true);
   cancelling = signal<string | null>(null);
@@ -122,14 +130,30 @@ export class BookingsComponent implements OnInit {
     });
   }
 
-  setTab(tab: 'ongoing' | 'completed' | 'cancelled') { this.activeTab.set(tab); }
+  setTab(tab: 'prebooked' | 'ongoing' | 'completed' | 'cancelled') {
+    this.activeTab.set(tab);
+    this.loadBookings();
+  }
 
-  cancelBooking(id: string) {
-    if (!confirm('Cancel this booking?')) return;
+  async cancelBooking(id: string) {
+    const { value: reason, isConfirmed } = await Swal.fire({
+      title: 'Cancel Booking?',
+      input: 'textarea',
+      inputLabel: 'Reason for cancellation',
+      inputPlaceholder: 'e.g. Change of plans, found another parking...',
+      inputAttributes: { maxlength: '200' },
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Cancel Booking',
+      cancelButtonText: 'Keep Booking',
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      inputValidator: (value) => { if (!value?.trim()) return 'Please enter a reason'; return null; }
+    });
+    if (!isConfirmed) return;
     this.cancelling.set(id);
-    this.api.cancelBooking(id).subscribe({
-      next: () => {
-        this.allBookings.update(b => b.map(x => x._id === id ? { ...x, status: 'cancelled' } : x));
+    this.api.cancelBooking(id, reason.trim()).subscribe({
+      next: (res) => {
+        this.allBookings.update(b => b.map(x => x._id === id ? { ...x, status: 'cancelled', cancelReason: res.data.cancelReason } : x));
         this.cancelling.set(null);
       },
       error: () => this.cancelling.set(null)

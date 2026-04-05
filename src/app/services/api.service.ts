@@ -23,7 +23,7 @@ export class ApiService {
     return this.http.get<any>(`${BASE}/parkings/${id}`);
   }
 
-  submitParkingRequest(data: any) {
+  submitParkingRequest(data: FormData | any) {
     return this.http.post<any>(`${BASE}/parkings/request`, data);
   }
 
@@ -34,12 +34,16 @@ export class ApiService {
     return this.http.get<any>(`${BASE}/bookings`, { ...this.headers, params });
   }
 
-  createBooking(data: { parkingId: string; date: string; time: string; duration: number }) {
+  createBooking(data: { parkingId: string; date: string; time: string; duration: number; vehicleNumber?: string; vehicleType?: string }) {
     return this.http.post<any>(`${BASE}/bookings`, data, this.headers);
   }
 
-  cancelBooking(id: string) {
-    return this.http.put<any>(`${BASE}/bookings/${id}/cancel`, {}, this.headers);
+  getBookingReceipt(id: string) {
+    return this.http.get<any>(`${BASE}/bookings/${id}/receipt`, this.headers);
+  }
+
+  cancelBooking(id: string, reason: string) {
+    return this.http.put<any>(`${BASE}/bookings/${id}/cancel`, { reason }, this.headers);
   }
 
   // ── Contact ───────────────────────────────────────────

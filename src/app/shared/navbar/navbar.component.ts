@@ -24,7 +24,7 @@ import { ApiService } from '../../services/api.service';
         <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
         <li><a routerLink="/contact" routerLinkActive="active">Contact Us</a></li>
         <li>
-          <a (click)="goToProfile()" class="profile-nav-btn" [class.active]="isProfileActive()" style="cursor:pointer">
+          <a (click)="goToProfile()" class="profile-nav-btn px-3 py-2 rounded-pill" [class.active]="isProfileActive()" style="cursor:pointer">
             <i class="fa-solid fa-circle-user me-1"></i>
             {{auth.isLoggedIn() ? (auth.currentUser()?.name?.split(' ')?.[0] ?? 'Profile') : 'Profile'}}
           </a>
