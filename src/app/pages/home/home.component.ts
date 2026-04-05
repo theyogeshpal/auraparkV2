@@ -160,7 +160,102 @@ import { ApiService } from '../../services/api.service';
   </div>
 </section>
 
-<!-- Testimonials -->
+<!-- Stats Counter -->
+<section class="stats-section py-5">
+  <div class="container py-lg-3">
+    <div class="row g-4 text-center">
+      <div class="col-6 col-lg-3">
+        <div class="stat-item">
+          <div class="stat-num">500<span class="text-danger">+</span></div>
+          <div class="stat-label">Parking Spots</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-item">
+          <div class="stat-num">10K<span class="text-danger">+</span></div>
+          <div class="stat-label">Happy Drivers</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-item">
+          <div class="stat-num">50<span class="text-danger">+</span></div>
+          <div class="stat-label">Cities Covered</div>
+        </div>
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="stat-item">
+          <div class="stat-num">99<span class="text-danger">%</span></div>
+          <div class="stat-label">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Why Choose Us -->
+<section class="why-section py-5 bg-white">
+  <div class="container py-lg-4">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-5">
+        <span class="t-badge mb-3 d-inline-block">WHY AURAPARK</span>
+        <h2 class="why-title fw-bold mb-4">Smarter Parking <br><span class="text-danger">Starts Here</span></h2>
+        <p class="text-muted mb-5" style="font-size:1.05rem;line-height:1.8">AuraPark is built for the modern driver — fast, reliable, and always available. No more circling blocks or guessing games.</p>
+        <a routerLink="/find-parking" class="btn btn-dark px-5 py-3 rounded-pill fw-bold">Find Parking Now <i class="fa-solid fa-arrow-right ms-2"></i></a>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-3">
+          <div class="col-sm-6" *ngFor="let f of whyFeatures">
+            <div class="why-card">
+              <div class="why-icon" [style.background]="f.bg" [style.color]="f.color">
+                <i class="fa-solid" [class]="f.icon"></i>
+              </div>
+              <h6 class="fw-bold mt-3 mb-2">{{f.title}}</h6>
+              <p class="text-muted small mb-0">{{f.desc}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Vehicle Types -->
+<section class="vehicle-section py-5">
+  <div class="container py-lg-3">
+    <div class="text-center mb-5">
+      <span class="t-badge mb-3 d-inline-block">VEHICLE SUPPORT</span>
+      <h2 class="fw-bold">Parking for <span class="text-danger">Every Vehicle</span></h2>
+      <p class="text-muted">Whether you ride a scooter or drive an SUV, we have a spot for you.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-6 col-lg-3" *ngFor="let v of vehicleTypes">
+        <div class="vehicle-card text-center">
+          <img [src]="v.img" [alt]="v.name" class="vehicle-img mb-3">
+          <h6 class="fw-bold">{{v.name}}</h6>
+          <p class="text-muted small mb-0">{{v.desc}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
+<section class="cta-section py-5">
+  <div class="container">
+    <div class="cta-card">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-8">
+          <h2 class="cta-title fw-bold mb-3">Ready to Park <span class="text-warning">Smarter?</span></h2>
+          <p class="cta-sub mb-0">Join thousands of drivers who save time and money with AuraPark every day.</p>
+        </div>
+        <div class="col-lg-4 text-lg-end">
+          <a routerLink="/find-parking" class="btn btn-warning px-5 py-3 rounded-pill fw-bold me-2 mb-2"><i class="fa-solid fa-magnifying-glass me-2"></i>Find Parking</a>
+          <a routerLink="/add-parking" class="btn btn-outline-light px-5 py-3 rounded-pill fw-bold mb-2"><i class="fa-solid fa-plus me-2"></i>List Yours</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 <section class="testimonials-section py-5">
   <div class="container">
     <div class="text-center mb-5">
@@ -288,6 +383,38 @@ import { ApiService } from '../../services/api.service';
     .result-rate { font-weight: 800; color: #10b981; font-size: 0.9rem; white-space: nowrap; }
     .search-view-all { padding: 12px 20px; text-align: center; font-size: 0.85rem; font-weight: 700; color: #3b82f6; cursor: pointer; background: #f8fafc; }
     .search-view-all:hover { background: #eff6ff; }
+
+    /* Stats */
+    .stats-section { background: linear-gradient(135deg, #0f172a, #1e293b); }
+    .stat-item { padding: 20px; }
+    .stat-num { font-size: 3rem; font-weight: 900; color: white; line-height: 1; margin-bottom: 8px; }
+    .stat-label { font-size: 0.9rem; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Why Choose Us */
+    .why-title { font-size: 2.8rem; color: #0f172a; line-height: 1.2; letter-spacing: -1px; }
+    .why-card { background: #f8fafc; border-radius: 20px; padding: 24px; border: 1px solid #f1f5f9; transition: all 0.3s; height: 100%; }
+    .why-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.08); background: white; }
+    .why-icon { width: 52px; height: 52px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+
+    /* Vehicle Types */
+    .vehicle-section { background: #f8fafc; }
+    .vehicle-card { background: white; border-radius: 20px; padding: 28px 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 12px rgba(0,0,0,0.04); transition: all 0.3s; }
+    .vehicle-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: #fca5a5; }
+    .vehicle-img { height: 100px; object-fit: contain; transition: transform 0.3s; }
+    .vehicle-card:hover .vehicle-img { transform: scale(1.1); }
+
+    /* CTA */
+    .cta-section { background: #f8fafc; }
+    .cta-card { background: linear-gradient(135deg, #AB1111, #dc2626); border-radius: 28px; padding: 50px 48px; box-shadow: 0 20px 60px rgba(171,17,17,0.25); }
+    .cta-title { font-size: 2.4rem; color: white; letter-spacing: -1px; }
+    .cta-sub { color: rgba(255,255,255,0.75); font-size: 1.05rem; }
+
+    @media (max-width: 576px) {
+      .stat-num { font-size: 2.2rem; }
+      .why-title { font-size: 2rem; }
+      .cta-title { font-size: 1.8rem; }
+      .cta-card { padding: 32px 24px; }
+    }
     .s-img { height: 120px; transition: transform 0.4s ease; }
     .service-card:hover .s-img { transform: scale(1.1); }
     @media (max-width: 426px) {
@@ -310,6 +437,22 @@ export class HomeComponent implements OnInit {
   faqs = signal<any[]>([]);
   private allParkings: any[] = [];
   private loaded = false;
+
+  whyFeatures = [
+    { icon: 'fa-bolt', title: 'Instant Booking', desc: 'Reserve your spot in seconds — no calls, no waiting.', bg: '#fef9c3', color: '#854d0e' },
+    { icon: 'fa-shield-halved', title: 'Secure & Verified', desc: 'Every parking spot is verified before listing.', bg: '#dcfce7', color: '#166534' },
+    { icon: 'fa-indian-rupee-sign', title: 'Best Rates', desc: 'Transparent pricing with no hidden charges ever.', bg: '#eff6ff', color: '#1d4ed8' },
+    { icon: 'fa-clock-rotate-left', title: '24/7 Support', desc: 'Our team is always ready to help you anytime.', bg: '#fdf4ff', color: '#7c3aed' },
+    { icon: 'fa-location-dot', title: 'Real-Time Maps', desc: 'Live directions to your booked parking spot.', bg: '#fff1f2', color: '#be123c' },
+    { icon: 'fa-mobile-screen', title: 'Mobile Friendly', desc: 'Seamless experience on any device, anywhere.', bg: '#f0fdf4', color: '#15803d' },
+  ];
+
+  vehicleTypes = [
+    { name: 'Hatchback', img: '/Assets/images/Honda-car-image.png', desc: 'Compact cars & hatchbacks' },
+    { name: 'SUV / Jeep', img: '/Assets/images/jeep-image.png', desc: 'Large SUVs & 4x4 vehicles' },
+    { name: 'Motorcycle', img: '/Assets/images/honda-shine.png', desc: 'Bikes & motorcycles' },
+    { name: 'Scooter', img: '/Assets/images/hf-delux.png', desc: 'Scooters & mopeds' },
+  ];
 
   constructor(private router: Router, private api: ApiService) {}
 

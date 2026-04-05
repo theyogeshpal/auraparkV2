@@ -15,8 +15,8 @@ import { ApiService } from '../../services/api.service';
         <img src="/Assets/images/AuraPark-logo (2).png" style="height: 120px" alt="AuraPark">
       </div>
     </div>
-    <div class="col-sm-8 d-flex align-items-center justify-content-between">
-      <ul class="border-0 nav-tabs">
+    <div class="col-sm-8 px-5 d-flex align-items-center justify-content-between">
+      <ul class="border-0 gap-5 nav-tabs">
         <li><a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Home</a></li>
         <li><a routerLink="/find-parking" routerLinkActive="active">Find Parking</a></li>
         <li><a routerLink="/add-parking" routerLinkActive="active">Add Parking</a></li>
@@ -67,7 +67,7 @@ import { ApiService } from '../../services/api.service';
     #header { transition: background-color 0.2s ease; background-color: transparent; }
     #header.scrolled { background-color: black; }
     .main-nav { background-color: transparent; }
-    .nav-tabs { margin: 0; width: 75%; display: flex; justify-content: space-evenly; font-size: 16px; list-style: none; border: none; }
+    .nav-tabs { margin: 0; width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 15px; list-style: none; border: none; padding-right: 16px; }
     .nav-tabs > li > a { text-decoration: none; color: white; opacity: 0.6; }
     .nav-tabs > li > a:hover, .nav-tabs > li > a.active { opacity: 1 !important; color: white; }
     .notif-nav-btn { color: white; opacity: 0.6; font-size: 1.1rem; padding: 4px 10px; }
