@@ -10,7 +10,7 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'http://localhost:5000/api/auth';
+  private readonly API = 'https://aurapark-backend.onrender.com/api/auth';
   private readonly TOKEN_KEY = 'aurapark_token';
   private readonly USER_KEY = 'aurapark_user';
 
