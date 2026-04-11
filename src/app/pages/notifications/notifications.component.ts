@@ -53,7 +53,7 @@ import { ApiService } from '../../services/api.service';
 </div>
   `,
   styles: [`
-    .notif-page { background: #f1f5f9; min-height: 100vh; padding-bottom: 40px; }
+    .notif-page { background: #f1f5f9; min-height: 100vh; padding-bottom: 40px; padding-top: 70px; }
     .notif-header { background: #0f0f0f; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 100; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; max-width: 700px; margin: 0 auto; }
     .back-btn { width: 36px; height: 36px; border: none; background: rgba(255,255,255,0.08); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }

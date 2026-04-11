@@ -81,7 +81,7 @@ import { ApiService } from '../../services/api.service';
 })
 export class FindParkingComponent implements OnInit {
   searchCity = '';
-  loading = false;
+  loading = true;
   bikeImg = '/Assets/images/hf-delux.png';
   carImg = '/Assets/images/Honda-car-image.png';
   bothImg = '/Assets/images/car-scooty-ezgif.com-crop.gif';
@@ -99,8 +99,14 @@ export class FindParkingComponent implements OnInit {
 
   loadParkings() {
     this.loading = true;
-    this.api.getParkings(this.searchCity ? { q: this.searchCity } : {}).subscribe({
-      next: (res) => { this.parkings = res.data || []; this.filtered = [...this.parkings]; this.loading = false; },
+    this.api.getParkings({}).subscribe({
+      next: (res) => {
+        this.parkings = res.data || [];
+        this.filtered = this.searchCity
+          ? this.parkings.filter(p => p.city.toLowerCase().includes(this.searchCity.toLowerCase()) || p.parkingname.toLowerCase().includes(this.searchCity.toLowerCase()))
+          : [...this.parkings];
+        this.loading = false;
+      },
       error: () => { this.loading = false; }
     });
   }
@@ -108,7 +114,11 @@ export class FindParkingComponent implements OnInit {
   onSearch() {
     const q = this.searchCity.toLowerCase();
     if (!q) { this.filtered = [...this.parkings]; return; }
-    this.filtered = this.parkings.filter(p => p.city.toLowerCase().includes(q) || p.parkingname.toLowerCase().includes(q));
+    this.filtered = this.parkings.filter(p =>
+      p.city.toLowerCase().includes(q) ||
+      p.parkingname.toLowerCase().includes(q) ||
+      p.address.toLowerCase().includes(q)
+    );
   }
 
   bookParking(parking: any) {

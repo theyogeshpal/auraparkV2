@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, HostListener } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -40,11 +40,11 @@ import { ApiService } from '../../services/api.service';
       Find the exact parking spot you need, filtered by your comfort and budget.
     </p>
     <div class="d-flex flex-wrap gap-3 p-3 align-items-center justify-content-center">
-      <a routerLink="/find-parking" class="btn goto-btn px-4 bg-white d-flex justify-content-center align-items-center ms-sm-5 fw-bold">
-        <img class="location-map me-3" style="height: 50px;" src="/Assets/images/wired-lineal-52-location-pin-on-square-map.gif" alt="">
+      <a (click)="installApp()" class="btn goto-btn px-4 bg-white d-flex justify-content-center align-items-center ms-sm-5 fw-bold" style="cursor:pointer">
+        <img class="location-map me-3" style="height: 50px;" src="/Assets/images/applogo.png" alt="">
         <div class="m-0 p-0 text-black d-flex gap-0 flex-column">
-          <span class="fs-5 my-0 py-0">PARKING</span>
-          <span class="text-start fw-normal my-0 py-0">Near Me</span>
+          <span class="fs-5 my-0 py-0">DOWNLOAD</span>
+          <span class="text-start fw-normal my-0 py-0">Our App</span>
         </div>
       </a>
       <a routerLink="/add-parking" class="btn goto-btn px-4 bg-white d-flex justify-content-center align-items-center ms-sm-5 fw-bold">
@@ -438,6 +438,7 @@ export class HomeComponent implements OnInit {
   faqs = signal<any[]>([]);
   private allParkings: any[] = [];
   private loaded = false;
+  private deferredPrompt: any = null;
 
   whyFeatures = [
     { icon: 'fa-bolt', title: 'Instant Booking', desc: 'Reserve your spot in seconds — no calls, no waiting.', bg: '#fef9c3', color: '#854d0e' },
@@ -462,6 +463,22 @@ export class HomeComponent implements OnInit {
       next: (res) => this.faqs.set(res.data || []),
       error: () => {}
     });
+  }
+
+  @HostListener('window:beforeinstallprompt', ['$event'])
+  onBeforeInstallPrompt(e: any) {
+    e.preventDefault();
+    this.deferredPrompt = e;
+  }
+
+  installApp() {
+    if (this.deferredPrompt) {
+      this.deferredPrompt.prompt();
+      this.deferredPrompt.userChoice.then(() => { this.deferredPrompt = null; });
+    } else {
+      // Fallback — open app in new tab for manual install
+      window.open('https://aurapark-v2.vercel.app', '_blank');
+    }
   }
 
   onType(q: string) {
