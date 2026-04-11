@@ -402,6 +402,7 @@ import { ApiService } from '../../services/api.service';
     .vehicle-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); border-color: #fca5a5; }
     .vehicle-img { height: 100px; object-fit: contain; transition: transform 0.3s; }
     .vehicle-card:hover .vehicle-img { transform: scale(1.1); }
+    @media (max-width: 576px) { .vehicle-img { height: 65px; } }
 
     /* CTA */
     .cta-section { background: #f8fafc; }

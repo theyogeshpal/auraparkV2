@@ -12,7 +12,7 @@ import { ApiService } from '../../services/api.service';
   <div class="row">
     <div class="col-sm-4 d-flex align-items-center main-nav">
       <div class="logo p-0 m-0">
-        <img src="/Assets/images/AuraPark-logo (2).png" style="height: 120px" alt="AuraPark">
+        <img src="/Assets/images/AuraPark-logo (2).png" style="height: 80px" alt="AuraPark">
       </div>
     </div>
     <div class="col-sm-8 px-5 d-flex align-items-center justify-content-between">
@@ -67,7 +67,7 @@ import { ApiService } from '../../services/api.service';
     #header { transition: background-color 0.2s ease; background-color: transparent; }
     #header.scrolled { background-color: black; }
     .main-nav { background-color: transparent; }
-    .nav-tabs { margin: 0; width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 15px; list-style: none; border: none; padding-right: 16px; }
+    .nav-tabs { margin: 0; width: 100%; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 14px; list-style: none; border: none; padding-right: 8px; white-space: nowrap; flex-wrap: nowrap; }
     .nav-tabs > li > a { text-decoration: none; color: white; opacity: 0.6; }
     .nav-tabs > li > a:hover, .nav-tabs > li > a.active { opacity: 1 !important; color: white; }
     .notif-nav-btn { color: white; opacity: 0.6; font-size: 1.1rem; padding: 4px 10px; }
