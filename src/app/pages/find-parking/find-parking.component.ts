@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -37,8 +37,9 @@ import { ApiService } from '../../services/api.service';
     </div>
 
     <div id="parkingscontainer">
-      <div *ngIf="loading" class="d-flex justify-content-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
+      <div *ngIf="loading" class="d-flex flex-column justify-content-center align-items-center py-5">
+        <div class="spinner-border text-primary mb-3" role="status"></div>
+        <p class="text-muted small">Loading parkings, please wait...</p>
       </div>
 
       <div *ngIf="!loading">
@@ -88,7 +89,7 @@ export class FindParkingComponent implements OnInit {
   parkings: any[] = [];
   filtered: any[] = [];
 
-  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private api: ApiService, private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
@@ -99,6 +100,11 @@ export class FindParkingComponent implements OnInit {
 
   loadParkings() {
     this.loading = true;
+    // Retry up to 3 times for Render cold start
+    this.tryLoad(0);
+  }
+
+  private tryLoad(attempt: number) {
     this.api.getParkings({}).subscribe({
       next: (res) => {
         this.parkings = res.data || [];
@@ -106,8 +112,16 @@ export class FindParkingComponent implements OnInit {
           ? this.parkings.filter(p => p.city.toLowerCase().includes(this.searchCity.toLowerCase()) || p.parkingname.toLowerCase().includes(this.searchCity.toLowerCase()))
           : [...this.parkings];
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => { this.loading = false; }
+      error: () => {
+        if (attempt < 2) {
+          setTimeout(() => this.tryLoad(attempt + 1), 3000);
+        } else {
+          this.loading = false;
+          this.cdr.detectChanges();
+        }
+      }
     });
   }
 

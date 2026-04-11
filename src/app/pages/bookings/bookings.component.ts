@@ -75,8 +75,9 @@ import Swal from 'sweetalert2';
     .back-btn:hover { color: #111827; }
     .page-title { font-size: 1.25rem; font-weight: 700; color: #111827; margin: 0; }
     .tabs-container { padding: 5px 20px 20px; }
-    .tabs { display: flex; background: white; border-radius: 30px; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .tab-btn { flex: 1; border: none; background: transparent; padding: 12px 0; font-size: 0.9rem; font-weight: 600; color: #6b7280; border-radius: 24px; cursor: pointer; transition: all 0.2s ease; }
+    .tabs { display: flex; background: white; border-radius: 30px; padding: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow-x: auto; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn { flex: 0 0 auto; border: none; background: transparent; padding: 10px 16px; font-size: 0.82rem; font-weight: 600; color: #6b7280; border-radius: 24px; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
     .tab-btn.active { background: #10b981; color: white; box-shadow: 0 4px 10px rgba(16,185,129,0.25); }
     .booking-list { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 16px; }
     .no-bookings { text-align: center; color: #6b7280; padding: 40px 0; font-weight: 500; background: white; border-radius: 20px; }

@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AuthService } from './auth.service';
 
-const BASE = 'https://aurapark-backend.onrender.com/api';
+const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+const BASE = isLocal ? 'http://localhost:5000/api' : 'https://aurapark-backend.onrender.com/api';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {

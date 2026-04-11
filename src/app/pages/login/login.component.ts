@@ -52,11 +52,11 @@ import { AuthService } from '../../services/auth.service';
     .auth-wrapper { min-height:100vh; background:linear-gradient(135deg,#0f172a,#1e293b); display:flex; align-items:center; justify-content:center; padding:20px; }
     .auth-card { background:white; border-radius:24px; padding:40px; width:100%; max-width:420px; box-shadow:0 25px 60px rgba(0,0,0,0.3); }
     .form-label-custom { font-size:0.82rem; font-weight:700; color:#374151; display:block; margin-bottom:6px; }
-    .input-group-custom { display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0 14px; gap:10px; transition:border-color 0.2s; }
+    .input-group-custom { display:flex; align-items:center; background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:0 14px; gap:10px; transition:border-color 0.2s; overflow:hidden; }
     .input-group-custom:focus-within { border-color:#AB1111; background:white; }
     .input-group-custom i { color:#94a3b8; font-size:0.9rem; flex-shrink:0; }
-    .input-group-custom input { flex:1; border:none; background:transparent; padding:13px 0; font-size:0.95rem; color:#1e293b; outline:none; }
-    .toggle-eye { cursor:pointer !important; }
+    .input-group-custom input { flex:1; min-width:0; border:none; background:transparent; padding:13px 0; font-size:0.95rem; color:#1e293b; outline:none; }
+    .toggle-eye { cursor:pointer !important; flex-shrink:0; padding:4px; }
     .auth-btn { background:#AB1111; color:white; border:none; border-radius:12px; padding:14px; font-weight:700; font-size:1rem; transition:all 0.3s; cursor:pointer; }
     .auth-btn:hover:not(:disabled) { background:#8f0d0d; transform:translateY(-2px); box-shadow:0 8px 20px rgba(171,17,17,0.3); }
     .auth-btn:disabled { opacity:0.7; cursor:not-allowed; }

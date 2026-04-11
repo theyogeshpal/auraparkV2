@@ -10,7 +10,10 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'https://aurapark-backend.onrender.com/api/auth';
+  private get API() {
+    const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+    return isLocal ? 'http://localhost:5000/api/auth' : 'https://aurapark-backend.onrender.com/api/auth';
+  }
   private readonly TOKEN_KEY = 'aurapark_token';
   private readonly USER_KEY = 'aurapark_user';
 

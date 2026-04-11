@@ -252,7 +252,13 @@ export class AddParkingComponent {
         this.form = { name: '', email: '', mobile: '', parkingName: '', address: '', city: '', state: '', map: '', type: 'Both', carSpace: '', bikeSpace: '', hourRate: '', operatingHours: '', covered: false, evCharging: false };
         this.removePhoto();
         this.loading.set(false);
-        (window as any).Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.message || 'Spot submitted for review!', showConfirmButton: false, timer: 3500 });
+        (window as any).Swal.fire({
+          title: 'Success!',
+          text: 'admin will contact you soon for verification',
+          icon: 'success',
+          confirmButtonColor: '#AB1111',
+          confirmButtonText: 'Got it!'
+        });
       },
       error: (err) => { this.error.set(err.error?.message || 'Submission failed. Please try again.'); this.loading.set(false); }
     });
